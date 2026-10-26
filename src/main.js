@@ -55,8 +55,9 @@ class Game {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.1;
+    this.renderer.toneMappingExposure = 1.15;
   }
 
   onWindowResize() {
@@ -74,7 +75,10 @@ class Game {
     this.collectibles.resetAll();
     this.ui.updateHealth(this.player.health);
     this.ui.coinsCount.textContent = '0';
-    this.ui.starsCount.textContent = '0 / 3';
+    this.ui.redCoinsCount.textContent = '0 / 8';
+    this.ui.starsCount.textContent = '0 / 5';
+    this.ui.starsCollectedState = [false, false, false, false, false];
+    this.ui.renderMissionsList();
     this.ui.startTimer();
   }
 
@@ -86,33 +90,38 @@ class Game {
     this.lastTime = now;
 
     if (!this.ui.isPaused) {
+      // 1. Poll Gamepad Controller input
+      this.ui.pollGamepad(delta);
+
       const input = this.ui.consumeInput();
 
-      // 1. Update Player
+      // 2. Update Player (physics, wall jumps, belly dive, shockwave, crates)
       this.player.update(
         delta,
         input,
         this.cameraController.yaw,
         this.world.colliders,
-        this.world.bouncePads
+        this.world.bouncePads,
+        this.enemies.enemies,
+        this.world.crates
       );
 
-      // 2. Health HUD Sync
+      // 3. Health HUD Sync
       if (this.player.health !== this.lastHealth) {
         this.ui.updateHealth(this.player.health);
         this.lastHealth = this.player.health;
       }
 
-      // 3. Update Camera
+      // 4. Update Third Person Camera (FOV expansion, trauma shake, orbit)
       this.cameraController.update(delta, this.player, this.world.colliders);
 
-      // 4. Update World (moving platforms, hazard beams, drifting clouds)
-      this.world.update(delta, this.player);
+      // 5. Update World (moving platforms, water ripples, rotating cogs, updrafts, crates)
+      this.world.update(delta, this.player, this.collectibles);
 
-      // 5. Update Enemies
+      // 6. Update Enemies (standard slimes, winged slimes, spiky iron slimes)
       this.enemies.update(delta, this.player, this.collectibles);
 
-      // 6. Update Collectibles
+      // 7. Update Collectibles (coins, red coins quest, 5 power stars, hearts)
       this.collectibles.update(delta, this.player);
     }
 
