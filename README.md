@@ -13,6 +13,7 @@
   <img src="https://img.shields.io/badge/Vite-8.x-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
   <img src="https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript" />
   <img src="https://img.shields.io/badge/Web_Audio_API-Procedural_SFX-00d2d3?style=for-the-badge" alt="Web Audio" />
+  <img src="https://img.shields.io/badge/Electron-Desktop_App-47848F?style=for-the-badge&logo=electron&logoColor=white" alt="Electron" />
   <img src="https://img.shields.io/badge/License-MIT-ff4757?style=for-the-badge" alt="License" />
 </p>
 
@@ -83,6 +84,8 @@
 
 ```
 game/
+├── electron/
+│   └── main.cjs                  # Electron main process & desktop window lifecycle
 ├── public/
 │   └── screenshots/
 │       └── gameplay.png          # High-resolution gameplay preview
@@ -97,6 +100,7 @@ game/
 │   ├── ui.js                     # DOM overlays, input handlers, virtual joystick & modals
 │   └── world.js                  # Procedural floating islands, platforms & lighting
 ├── index.html                    # Application entrypoint & SEO meta tags
+├── vite.config.js                # Vite build config with relative base for Electron
 ├── package.json                  # Dependencies & npm scripts
 └── README.md                     # Project documentation
 ```
@@ -123,17 +127,48 @@ game/
    npm install
    ```
 
-3. **Start the development server**:
-   ```bash
-   npm run dev
-   ```
-   Open your browser at **`http://localhost:5173/`** and start hopping!
+---
 
-4. **Build for production**:
+### 🌐 Running in the Web Browser
+
+- **Start Vite Dev Server**:
+  ```bash
+  npm run dev
+  ```
+  Open **`http://localhost:5173/`** in any browser.
+
+- **Build Production Web Bundle**:
+  ```bash
+  npm run build
+  ```
+  The production assets are generated in `dist/`.
+
+---
+
+### 🖥️ Running as a Desktop App (Electron)
+
+You can launch and package the game natively for desktop without any web browser needed:
+
+1. **Launch Desktop App in Dev Mode** (with hot reload):
    ```bash
-   npm run build
+   npm run app:dev
    ```
-   The optimized production bundle will be generated in the `dist/` directory.
+
+2. **Run Built Desktop App Locally**:
+   ```bash
+   npm run app:start
+   ```
+
+3. **Package Standalone Windows `.exe` Installer & Portable App**:
+   ```bash
+   npm run app:build
+   ```
+   *Generates Windows installer and portable `.exe` in the `release/` folder.*
+
+4. **Generate Portable `.exe` Only**:
+   ```bash
+   npm run app:build:portable
+   ```
 
 ---
 
