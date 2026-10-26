@@ -12,16 +12,34 @@
   <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Platform" />
   <img src="https://img.shields.io/badge/Desktop-Electron_45-47848F?style=for-the-badge&logo=electron&logoColor=white" alt="Electron" />
   <img src="https://img.shields.io/badge/3D_Engine-Three.js_r186-black?style=for-the-badge&logo=three.js&logoColor=white" alt="Three.js" />
-  <img src="https://img.shields.io/badge/Bundler-Vite_8-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
   <img src="https://img.shields.io/badge/Offline-100%25_No_Internet-2ed573?style=for-the-badge" alt="Offline Ready" />
   <img src="https://img.shields.io/badge/License-MIT-ff4757?style=for-the-badge" alt="License" />
 </p>
 
+<p align="center">
+  <a href="https://segn11.github.io/low-poly-3d-adventure/">
+    <img src="https://img.shields.io/badge/▶_PLAY_LIVE_ONLINE-Browser_Version-2ed573?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Play Live" />
+  </a>
+  <a href="https://github.com/Segn11/low-poly-3d-adventure/releases">
+    <img src="https://img.shields.io/badge/📥_DOWNLOAD_DESKTOP_APP-.exe_Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Download .exe" />
+  </a>
+</p>
+
 ---
 
-## 🕹️ About The Desktop App
+## 🌍 Play Online & Download Desktop Game
 
-**Super Star Hopper** is a native desktop 3D platformer running directly in a standalone, hardware-accelerated window on your computer. Inspired by classics like *Super Mario 64* and *A Hat in Time*, you control a nimble low-poly adventurer exploring a network of floating sky islands. Leap across oscillating stone bridges, bounce on high-altitude spring mushrooms, squash purple slime monsters, collect gleaming gold coins, and retrieve the **3 Grand Power Stars** to unlock the Summit Altar.
+| Platform | Access Method | Link |
+| :--- | :--- | :--- |
+| **🌐 Web Browser** | Instant play on PC, Mac, iPhone, Android (No download required) | [**▶️ Play Live on GitHub Pages**](https://segn11.github.io/low-poly-3d-adventure/) |
+| **🪟 Windows Setup Installer** | Installs on Windows PC with desktop and start menu shortcuts | [**📥 Download Setup Installer (.exe)**](https://github.com/Segn11/low-poly-3d-adventure/releases) |
+| **💼 Windows Portable** | Single standalone `.exe` file (run from USB drive or desktop) | [**📥 Download Portable .exe**](https://github.com/Segn11/low-poly-3d-adventure/releases) |
+
+---
+
+## 🕹️ About The Game
+
+**Super Star Hopper** is a fast-paced 3D low-poly platformer adventure available both as a **standalone desktop application** and an **instant browser-playable web game**. Inspired by classics like *Super Mario 64* and *A Hat in Time*, you control a nimble explorer venturing across floating sky islands. Leap across oscillating stone bridges, bounce on high-altitude spring mushrooms, squash purple slime monsters, collect gleaming gold coins, and retrieve the **3 Grand Power Stars** to unlock the Summit Altar.
 
 > [!TIP]
 > **Zero Installation Friction**: No external 3D models (.gltf) or audio files (.mp3) to download from external CDNs. The entire game runs 100% offline from your local disk with instant boot times.
