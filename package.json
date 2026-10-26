@@ -2,6 +2,11 @@
   "name": "super-star-hopper",
   "version": "1.0.0",
   "description": "3D Low-Poly Platformer Adventure game built with Three.js and Vite",
+  "author": "Segni Nadew",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Segn11/low-poly-3d-adventure.git"
+  },
   "private": true,
   "type": "module",
   "main": "electron/main.cjs",
@@ -11,9 +16,9 @@
     "preview": "vite preview",
     "app:dev": "concurrently -k \"cross-env BROWSER=none vite\" \"wait-on tcp:5173 && cross-env VITE_DEV_SERVER_URL=http://localhost:5173 electron .\"",
     "app:start": "npm run build && electron .",
-    "app:build": "npm run build && electron-builder",
-    "app:build:portable": "npm run build && electron-builder --win portable",
-    "app:build:dir": "npm run build && electron-builder --dir"
+    "app:build": "npm run build && electron-builder --publish never",
+    "app:build:portable": "npm run build && electron-builder --win portable --publish never",
+    "app:build:dir": "npm run build && electron-builder --dir --publish never"
   },
   "build": {
     "appId": "com.segn11.starhopper",
@@ -28,8 +33,8 @@
     ],
     "win": {
       "target": [
-        "portable",
-        "nsis"
+        "nsis",
+        "portable"
       ]
     },
     "nsis": {
