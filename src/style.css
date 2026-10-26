@@ -1,0 +1,499 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Fredoka:wght@500;600;700&display=swap');
+
+:root {
+  --primary: #ff4757;
+  --primary-glow: rgba(255, 71, 87, 0.45);
+  --gold: #ffa502;
+  --gold-glow: rgba(255, 165, 2, 0.5);
+  --sky: #00d2d3;
+  --accent: #2ed573;
+  --dark-bg: rgba(18, 22, 34, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --text-main: #ffffff;
+  --text-muted: #cbd5e1;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #70c5ff;
+  font-family: 'Fredoka', 'Outfit', sans-serif;
+  color: var(--text-main);
+}
+
+#app {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+canvas#game-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: grab;
+}
+
+canvas#game-canvas:active {
+  cursor: grabbing;
+}
+
+/* Glassmorphism Common Utilities */
+.glass-panel {
+  background: var(--dark-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+/* ----------------------------------------------------
+   HUD OVERLAY
+   ---------------------------------------------------- */
+#hud-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px;
+}
+
+.hud-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.hud-stats-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  pointer-events: auto;
+}
+
+/* Health Hearts */
+.heart-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+}
+
+.heart-icon {
+  width: 32px;
+  height: 32px;
+  display: inline-block;
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.heart-icon.pulse {
+  animation: heartPump 0.35s ease-in-out;
+}
+
+.heart-icon.lost {
+  filter: grayscale(1) opacity(0.3);
+  transform: scale(0.85);
+}
+
+@keyframes heartPump {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+/* Badges (Coins & Stars) */
+.stat-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 18px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.stat-badge.coins {
+  border-color: rgba(255, 165, 2, 0.4);
+}
+
+.stat-badge.coins .icon {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 2px 6px var(--gold-glow));
+  animation: floatSmall 2.5s ease-in-out infinite;
+}
+
+.stat-badge.stars {
+  border-color: rgba(255, 242, 0, 0.5);
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(18, 22, 34, 0.8));
+}
+
+.stat-badge.stars .icon {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 0 10px #ffeaa7);
+}
+
+.bounce-text {
+  animation: bouncePop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes bouncePop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); color: #fff275; }
+  100% { transform: scale(1); }
+}
+
+@keyframes floatSmall {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* Top-Right HUD Controls & Timer */
+.hud-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+.timer-badge {
+  padding: 8px 16px;
+  font-size: 1.25rem;
+  font-family: 'Outfit', monospace;
+  font-weight: 700;
+  color: #7bed9f;
+  border-color: rgba(46, 213, 115, 0.3);
+}
+
+.hud-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid var(--glass-border);
+  background: var(--dark-bg);
+  backdrop-filter: blur(10px);
+  color: #ffffff;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.hud-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  background: rgba(30, 39, 46, 0.9);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.hud-btn:active {
+  transform: translateY(1px) scale(0.96);
+}
+
+/* ----------------------------------------------------
+   HUD BOTTOM CONTROLS HINT & COMPASS
+   ---------------------------------------------------- */
+.hud-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.controls-hint {
+  padding: 12px 20px;
+  font-size: 0.95rem;
+  pointer-events: auto;
+  max-width: 460px;
+  line-height: 1.45;
+  transition: opacity 0.3s ease;
+}
+
+.controls-hint .hint-title {
+  font-weight: 700;
+  color: #70a1ff;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.controls-hint .kbd-key {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  margin: 0 2px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Notification Banner */
+#notification-banner {
+  position: absolute;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-30px);
+  padding: 12px 28px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 100;
+}
+
+#notification-banner.active {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* ----------------------------------------------------
+   MODALS (PAUSE & VICTORY)
+   ---------------------------------------------------- */
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 15, 26, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  width: 90%;
+  max-width: 480px;
+  padding: 36px;
+  text-align: center;
+  border-radius: 28px;
+  transform: scale(0.9);
+  transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-overlay.active .modal-card {
+  transform: scale(1);
+}
+
+.modal-title {
+  font-size: 2.4rem;
+  font-weight: 900;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #fff275, #ffa502);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.modal-subtitle {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  margin-bottom: 24px;
+}
+
+.modal-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.stat-box {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 14px 10px;
+}
+
+.stat-box-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.stat-box-value {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.btn-primary {
+  display: block;
+  width: 100%;
+  padding: 14px 24px;
+  margin-bottom: 12px;
+  border-radius: 16px;
+  border: none;
+  background: linear-gradient(135deg, #ff4757, #ff6b81);
+  color: white;
+  font-family: inherit;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 24px var(--primary-glow);
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(255, 71, 87, 0.6);
+}
+
+.btn-secondary {
+  display: block;
+  width: 100%;
+  padding: 12px 24px;
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+/* ----------------------------------------------------
+   TOUCH VIRTUAL JOYSTICK & BUTTONS (MOBILE SUPPORT)
+   ---------------------------------------------------- */
+#touch-controls {
+  position: absolute;
+  bottom: 24px;
+  left: 0;
+  width: 100%;
+  display: none;
+  justify-content: space-between;
+  padding: 0 32px;
+  pointer-events: none;
+  z-index: 50;
+}
+
+@media (pointer: coarse) {
+  #touch-controls {
+    display: flex;
+  }
+}
+
+.touch-stick-zone {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  pointer-events: auto;
+  position: relative;
+  touch-action: none;
+}
+
+.touch-stick-knob {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #ffffff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+.touch-action-buttons {
+  display: flex;
+  gap: 16px;
+  pointer-events: auto;
+  align-items: flex-end;
+}
+
+.touch-btn {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: var(--dark-bg);
+  backdrop-filter: blur(8px);
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.touch-btn.jump-btn {
+  background: linear-gradient(135deg, #00d2d3, #1e90ff);
+  width: 76px;
+  height: 76px;
+}
+
+.touch-btn.pound-btn {
+  background: linear-gradient(135deg, #ff4757, #ffa502);
+}
+
+/* ----------------------------------------------------
+   RESPONSIVE DESIGN
+   ---------------------------------------------------- */
+@media (max-width: 768px) {
+  #hud-overlay {
+    padding: 12px;
+  }
+
+  .stat-badge {
+    padding: 6px 12px;
+    font-size: 1.1rem;
+  }
+
+  .heart-container {
+    padding: 6px 10px;
+  }
+
+  .heart-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .controls-hint {
+    display: none;
+  }
+}
